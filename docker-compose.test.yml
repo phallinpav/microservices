@@ -1,0 +1,22 @@
+services:
+  mysql:
+    extends:
+      file: ./api/docker-compose.test.yml
+      service: mysql
+      
+  account-service:
+    extends:
+      file: ./api/docker-compose.test.yml
+      service: account-service
+    depends_on:
+      - mysql
+
+  ui:
+    build:
+      context: ./ui
+      target: test
+    environment:
+      - NUXT_HOST=0.0.0.0
+networks:
+  default:
+    name: microservice_network_test

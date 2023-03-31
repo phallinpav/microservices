@@ -1,0 +1,6 @@
+.github
+.husky
+.nuxt
+node_modules
+
+README.md

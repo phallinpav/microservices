@@ -1,0 +1,24 @@
+services:
+  mysql:
+    extends:
+      file: ./docker-compose.base.yml
+      service: mysql
+    ports:
+      - 3307:3306
+
+  account-service:
+    extends:
+      file: ./docker-compose.base.yml
+      service: account-service
+    build:
+      target: dev
+    ports:
+      - 8080:8080
+      - 8000:8000
+    volumes:
+      - ./account-service/:/app
+    environment:
+      - SHOW_SQL=true
+networks:
+  default:
+    name: microservice_network

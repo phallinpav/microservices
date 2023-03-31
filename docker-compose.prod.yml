@@ -1,0 +1,69 @@
+services:
+  mysql:
+    extends:
+      file: ./api/docker-compose.prod.yml
+      service: mysql
+      
+  account-service:
+    extends:
+      file: ./api/docker-compose.prod.yml
+      service: account-service
+    depends_on:
+      - mysql
+
+  ui:
+    build:
+      context: ./ui
+      target: prod
+    ports:
+      - 3000:3000
+    environment:
+      - NUXT_HOST=0.0.0.0
+
+  kong-db:
+    image: postgres:11
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kong
+    ports:
+      - 5432:5432
+
+  kong-migrate:
+    image: kong:2.8.1-alpine
+    user: root
+    command: bash ./script/kong-setup.sh
+    profiles: ["kong-setup"]
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-db
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kong
+    depends_on:
+      - kong-db
+    volumes:
+      - ./script:/script
+
+  kong-gateway:
+    image: kong:2.8.1
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-db
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kong
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - 8888:8000 #proxy
+      - 8443:8443 #proxy SSL
+      - 8001:8001 #admin api
+      - 8444:8444 #admin api SSL
+    depends_on:
+      - kong-db
+
+networks:
+  default:
+    name: microservice_network_prod
