@@ -24,7 +24,7 @@
     "typescript": "^4.7.2",
     "vee-validate": "^3.4.12",
     "vue": "^2.6.14",
-    "vue-server-renderer": "^2.6.14",
+    "vue-server-renderer": "^2.7.14",
     "vue-template-compiler": "^2.6.14",
     "vuetify": "^2.6.1",
     "vuex": "^3.0.0",
