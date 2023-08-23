@@ -1,7 +1,7 @@
 package com.mangobyte.accountservice.form;
 
 import com.mangobyte.accountservice.exception.CustomException;
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.Email;

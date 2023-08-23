@@ -1,6 +1,6 @@
 package com.mangobyte.accountservice.dao;
 
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account save(Account account);
 
     Optional<Account> findFirstByUsername(String username);
+
+    Optional<Account> findFirstByIdAndEmail(Long id, String email);
+
 }

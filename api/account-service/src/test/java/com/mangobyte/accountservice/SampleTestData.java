@@ -3,9 +3,9 @@ package com.mangobyte.accountservice;
 import com.mangobyte.accountservice.auth.model.ApiKeyAuthenticationToken;
 import com.mangobyte.accountservice.form.AccountCreateForm;
 import com.mangobyte.accountservice.form.AccountUpdateForm;
-import com.mangobyte.accountservice.model.Account;
 import com.mangobyte.accountservice.model.Role;
-import com.mangobyte.accountservice.model.Token;
+import com.mangobyte.accountservice.model.entity.Account;
+import com.mangobyte.accountservice.model.entity.Token;
 import com.mangobyte.accountservice.utils.CommonUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SampleTestData {
-
     public final static long ADMIN_ID = 1;
     public final static String ADMIN_USERNAME = "admin";
     public final static String ADMIN_PASS = "admin";
@@ -57,23 +56,23 @@ public class SampleTestData {
     public final static UsernamePasswordAuthenticationToken USER_BASIC_AUTH_TOKEN_RAW = getUserUserPassAuthTokenRaw();
     public final static PreAuthenticatedAuthenticationToken USER_API_AUTH_TOKEN_RAW = getUserApiAuthTokenRaw();
     public final static ApiKeyAuthenticationToken USER_API_AUTH_TOKEN = getUserApiAuthToken();
-
     public final static List<Account> ACCOUNTS = Arrays.asList(ADMIN_ACCOUNT, USER_ACCOUNT);
-
     public final static String UNKNOWN_BASIC_AUTH_HEADER = basicAuth("unknown", "u-password");
     public final static String UNKNOWN_TOKEN_VALUE = UUID.randomUUID().toString();
+    public final static Account UNKNOWN_ACCOUNT = getUnknownAccount();
+    public final static long UNKNOWN_ID = 99;
 
     private static Account getAdminAccount() {
-        Account account = Account.builder()
+        return Account.builder()
                 .id(ADMIN_ID)
                 .username(ADMIN_USERNAME)
                 .email("admin@email.com")
                 .password("$2a$10$QmMzLLAe8xAr0HHZ3opNx.pGnwtygTyvvw7V93BuXstefi0bI1qMC")
                 .role(Role.ADMIN)
+                .active(true) // FIXME: THIS IS CLEARLY NOT FULLY CONSIDER, JUST QUICK FIX
                 .createdAt(new Date())
                 .updatedAt(new Date())
                 .build();
-        return account;
     }
 
     private static AccountCreateForm getUserAccountCreateForm() {
@@ -91,7 +90,7 @@ public class SampleTestData {
     }
 
     private static Account getUserAccount() {
-        Account account = Account.builder()
+        return Account.builder()
                 .id(USER_ID)
                 .username(USER_USERNAME)
                 .email(USER_EMAIL)
@@ -99,8 +98,17 @@ public class SampleTestData {
                 .role(Role.USER)
                 .createdAt(new Date())
                 .updatedAt(new Date())
+                .active(true) // FIXME: THIS IS CLEARLY NOT FULLY CONSIDER, JUST QUICK FIX
                 .build();
-        return account;
+    }
+
+    private static Account getUnknownAccount() {
+        final Date now = CommonUtils.getDate();
+        Account unknownAccount = randomUserAccountRaw();
+        unknownAccount.setId(UNKNOWN_ID);
+        unknownAccount.setCreatedAt(now);
+        unknownAccount.setUpdatedAt(now);
+        return unknownAccount;
     }
 
     private static Token getAdminToken() {
@@ -188,6 +196,7 @@ public class SampleTestData {
                 .email(RandomStringUtils.randomAlphanumeric(3, 115) + "@email.com")
                 .password(CommonUtils.encodedPassword(RandomStringUtils.randomAlphanumeric(3, 30)))
                 .role(Role.USER)
+                .active(true) // FIXME: THIS IS CLEARLY NOT FULLY CONSIDER, JUST QUICK FIX
                 .build();
     }
 }

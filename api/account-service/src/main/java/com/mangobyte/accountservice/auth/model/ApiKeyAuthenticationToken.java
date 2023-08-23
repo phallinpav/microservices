@@ -1,6 +1,6 @@
 package com.mangobyte.accountservice.auth.model;
 
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Transient;

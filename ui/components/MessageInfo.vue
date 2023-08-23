@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="show" timeout="2000" :color="colorType">
+  <v-snackbar v-model="show" :timeout="timeout" :color="colorType">
     {{ $store.getters['message/text'] }}
     <template #action="{ attrs }">
       <v-btn
@@ -42,6 +42,10 @@ export default class MessageInfo extends Vue {
     } else {
       return this.$store.dispatch('message/hide')
     }
+  }
+
+  get timeout() {
+    return this.$store.getters['message/timeout']
   }
 }
 </script>

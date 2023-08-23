@@ -1,7 +1,7 @@
 package com.mangobyte.accountservice.controller;
 
-import com.mangobyte.accountservice.model.Account;
-import com.mangobyte.accountservice.model.Token;
+import com.mangobyte.accountservice.model.entity.Account;
+import com.mangobyte.accountservice.model.entity.Token;
 import com.mangobyte.accountservice.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

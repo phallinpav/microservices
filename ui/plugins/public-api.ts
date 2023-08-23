@@ -3,13 +3,7 @@ import { Inject } from '@nuxt/types/app'
 import type { NuxtAxiosInstance } from '@nuxtjs/axios'
 
 export default function ({ $axios }: Context, inject: Inject) {
-  const api = $axios.create({
-    auth: {
-      username: 'public',
-      password: 'publicPassword',
-    },
-  })
-
+  const api = $axios.create()
   inject('publicApi', api)
 }
 

@@ -1,13 +1,16 @@
 package com.mangobyte.accountservice.controller;
 
 import com.mangobyte.accountservice.SampleTestData;
+import com.mangobyte.accountservice.auth.config.SecurityConfig;
 import com.mangobyte.accountservice.auth.provider.ApiKeyAuthenticationProvider;
 import com.mangobyte.accountservice.auth.provider.UsernamePasswordAuthenticationProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +18,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
+@Import({ SecurityConfig.class })
 public class BaseControllerTest {
 
     @Autowired

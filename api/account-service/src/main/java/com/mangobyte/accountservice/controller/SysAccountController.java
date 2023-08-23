@@ -2,7 +2,7 @@ package com.mangobyte.accountservice.controller;
 
 import com.mangobyte.accountservice.exception.RecordNotFoundException;
 import com.mangobyte.accountservice.form.AccountCreateForm;
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import com.mangobyte.accountservice.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

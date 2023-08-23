@@ -1,9 +1,9 @@
 package com.mangobyte.accountservice.service.impl;
 
 import com.mangobyte.accountservice.dao.TokenRepository;
-import com.mangobyte.accountservice.model.Account;
 import com.mangobyte.accountservice.model.Role;
-import com.mangobyte.accountservice.model.Token;
+import com.mangobyte.accountservice.model.entity.Account;
+import com.mangobyte.accountservice.model.entity.Token;
 import com.mangobyte.accountservice.service.TokenService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

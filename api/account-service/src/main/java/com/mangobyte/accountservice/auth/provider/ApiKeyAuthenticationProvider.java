@@ -1,7 +1,7 @@
 package com.mangobyte.accountservice.auth.provider;
 
 import com.mangobyte.accountservice.auth.model.ApiKeyAuthenticationToken;
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import com.mangobyte.accountservice.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,6 +26,10 @@ public class ApiKeyAuthenticationProvider implements AuthenticationProvider {
         } else {
             Account account = tokenService.findAccountByToken(token)
                     .orElseThrow(() -> new BadCredentialsException("API Key is invalid"));
+            if (!account.getActive()) {
+                // FIXME: this concept of account active is not properly structure, need separate between active & email verified
+                throw new BadCredentialsException("account is inactive");
+            }
             return new ApiKeyAuthenticationToken(account, token);
         }
     }

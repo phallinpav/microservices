@@ -1,0 +1,45 @@
+# name: Build and Test API
+
+# on:
+#   push:
+#     branches: [ main ]
+#     paths: 
+#     - 'api/**'
+
+#   pull_request:
+#     branches: [ main ]
+#     paths: 
+#     - 'api/**'
+
+#   workflow_dispatch:
+
+# env:
+#   DOCKER_BUILDKIT: 1
+#   COMPOSE_DOCKER_CLI_BUILD: 1
+#   CACHE_PATH: /tmp/.buildx-cache
+
+# jobs:
+#   build_test_api:
+#     runs-on: ubuntu-latest
+#     steps:
+
+#       - name: Check Out Repo
+#         uses: actions/checkout@v2
+
+#       - name: Cache Docker layers
+#         uses: actions/cache@v2
+#         with:
+#           path: ${{ env.CACHE_PATH }}
+#           key: ${{ runner.os }}-buildx-${{ github.sha }}
+#           restore-keys: |
+#             ${{ runner.os }}-buildx-
+
+#       - name: Set up Docker Buildx
+#         id: buildx
+#         uses: docker/setup-buildx-action@v1
+#         with:
+#           driver-opts: env.BUILDKIT_STEP_LOG_MAX_SIZE=10485760
+
+#       - name: Run test account-service
+#         id: run_test_account_service
+#         run: docker-compose -f docker-compose.test.yml run account-service

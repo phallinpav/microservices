@@ -1,10 +1,8 @@
 # microservices ( Social Media )
 
+![structure](.github/badges/jacoco.svg)
+
 **Social Media** like friend and chatting
-
-**NOTE: This project is not complete. It is only for practice.**
-
-All information below is just my planning but did not get to finish it.
 
 ## Feature
 1. Add/Remove/Block Friends
@@ -13,6 +11,8 @@ All information below is just my planning but did not get to finish it.
 
 ## Structure
 
+**THIS PICTURE IS OUTDATED**, since I have been written **message-service** and **file-service** using C# .NET 6 as learning project. (More detail 
+of change is in written text below)
 ![structure](img/structure.png)
 
 - **ui/frontend**
@@ -37,18 +37,19 @@ All information below is just my planning but did not get to finish it.
         - **framework** : spring boot 2.6.7 - java17
         - **database**: MySQL8 ( using jpa & hibernate to create database and file and insert/delete record )
     - **message-service** ( send, receive, remove message )
-        - **framework**: spring boot 2.6.7 - java17
+        - **framework**: ~~spring boot 2.6.7 - java17~~  C# .NET 6
         - **database**: MongoDB
         - message type text will store in MongoDB
         - info of account will request to account-service
         - message type file ( photo/video ) will request to file-service
+        - Socket is being used to give interaction real time
     
-    - **post-service** ( upload/remove post, like and comment )
+    - **post-service** ( upload/remove post, like and comment ) ( NOT YET IMPLEMENT )
         - **framework**: spring boot 2.6.7 - java17
         - **database**: MySQL8
     - **file-service**
-        - **framework**: spring boot - java17
-        - **file-storage-system**: ( CEPH )
+        - **framework**: ~~spring boot - java17~~ C# .NET6
+        - **file-storage-system**: ~~( CEPH )~~ DropBox API
         - all images and videos like profile picture or message photos between friends are store inside this service
 
 ### How to run with docker
@@ -75,3 +76,18 @@ All information below is just my planning but did not get to finish it.
 - up and build ui: `docker-compose -f docker-compose.xxx.yml up -d --build ui`
 
 - up and build account-service and mysql: `docker-compose -f docker-compose.xxx.yml up -d --build mysql account-service`
+
+#### How to run Kong Gateway successfully
+- kong-migrate must first start build and finish without any error, so that it can execute script to migrate bootstrap to kong-db (Postgre Sql)
+- That why we need to first run this command: `docker-compose -f docker-compose.dev.yml --profile kong-setup up -d --build`
+- After it successfully built up for the first time, we don't need to execute that setup migration again. We can simply up/start the container.
+- See file `./script/kong-setup.sh` to know detail what it will do
+
+#### About Kong GUI
+- Create new user and password on first time access
+- Create connection to kong: ex: `Name=kong`, `KONG ADMIN URL=http://kong-gateway:8001`
+
+#### To request directly from UI to API without Kong
+- `api\account-service\src\main\java\com\mangobyte\accountservice\auth\config\SecurityConfig.java` :open this function `public CorsFilter corsFilter`
+- `ui\nuxt.config.js` : change axios baseurl from kong-gateway(localhost:8888) to backend(localhost:8080)
+- `ui\plugins\public-api.ts` : check that file comment to see what to use

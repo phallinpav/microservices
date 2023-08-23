@@ -113,11 +113,37 @@ export default class CreateAccount extends Vue {
       await this.$accountService
         .createAccount(account)
         .then(() => {
-          this.$store.dispatch('message/success', 'Created successfully!')
+          this.$store.dispatch('message/info', {
+            text: 'Please activate your account via email that we sent to you!',
+            timeout: 5000,
+          })
           this.$router.push('/login')
         })
-        .catch(() => {
-          this.$store.dispatch('message/error', 'Created fail!')
+        .catch((error) => {
+          if (error.response.data.status === 409) {
+            const message = error.response.data.message
+            const reg = /^Duplicate entry '(.*)' for key 'account.(.*)'$/gi
+            const matches = reg.exec(message)
+            if (matches) {
+              if (matches[2] === 'UK_acc_username') {
+                // TODO: make the error message on field username as well
+                this.$store.dispatch('message/error', {
+                  text: 'username already exist!',
+                })
+              } else if (matches[2] === 'UK_acc_email') {
+                // TODO: make the error message on field email as well
+                this.$store.dispatch('message/error', {
+                  text: 'email already exist!',
+                })
+              }
+            } else {
+              this.$store.dispatch('message/error', {
+                text: 'Unexpected error!',
+              })
+            }
+          } else {
+            this.$store.dispatch('message/error', { text: 'Unexpected error!' })
+          }
         })
         .finally(() => {
           this.loading = false

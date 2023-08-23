@@ -1,6 +1,6 @@
 package com.mangobyte.accountservice.form;
 
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import com.mangobyte.accountservice.model.Role;
 
 import javax.validation.constraints.Email;

@@ -17,6 +17,7 @@
         label="Password"
         counter
         @click:append="showPassword = !showPassword"
+        @keyup.enter="login"
       ></v-text-field>
 
       <v-btn
@@ -86,10 +87,10 @@ export default class Login extends Vue {
         .login(this.name, this.password)
         .finally(() => (this.loading = false))
       if (res) {
-        this.$store.dispatch('message/success', 'Login success!')
+        this.$store.dispatch('message/success', { text: 'Login success!' })
         this.$router.push('/')
       } else {
-        this.$store.dispatch('message/error', 'Login fail!')
+        this.$store.dispatch('message/error', { text: 'Login fail!' })
       }
     }
   }

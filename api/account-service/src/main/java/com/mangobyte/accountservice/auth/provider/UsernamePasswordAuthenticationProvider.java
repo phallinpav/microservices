@@ -1,6 +1,6 @@
 package com.mangobyte.accountservice.auth.provider;
 
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import com.mangobyte.accountservice.service.AccountService;
 import com.mangobyte.accountservice.utils.CommonUtils;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,10 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
         Account account = accountService.findFirstByUsername(name)
                 .orElseThrow(() -> new BadCredentialsException("invalid username or password"));
 
+        if (!account.getActive()) {
+            // FIXME: this concept of account active is not properly structure, need separate between active & email verified
+            throw new BadCredentialsException("account email is not yet verified");
+        }
         if (CommonUtils.isMatch(password, account.getPassword())) {
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));

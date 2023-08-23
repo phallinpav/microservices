@@ -15,6 +15,7 @@
 
 #### Running development environment
 - `docker-compose -f docker-compose.dev.yml up --build`
+
 ##### account-service:
   - How to debug: 
     - IntelliJ-IDE:
@@ -38,3 +39,10 @@
 - up and build account-service: `docker-compose -f docker-compose.xxx.yml up --build account-service`
 
 - up and build mysql and post-service: `docker-compose -f docker-compose.xxx.yml up --build mysql message-service`
+
+
+
+#### How to see test code coverage
+- `mvn jacoco:report` ( after execute mvn test )
+- Go to `/target/site/jacoco/index.html` to see report
+

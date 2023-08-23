@@ -1,13 +1,14 @@
 package com.mangobyte.accountservice.dao;
 
 import com.mangobyte.accountservice.SampleTestData;
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AccountRepositoryTest {
@@ -89,15 +91,17 @@ public class AccountRepositoryTest {
         Account acc1 = SampleTestData.randomUserAccountRaw();
         Account acc2 = SampleTestData.randomUserAccountRaw();
         Account acc3 = SampleTestData.randomUserAccountRaw();
+        Account admin = SampleTestData.ADMIN_ACCOUNT;
 
+        repository.save(admin);
         repository.save(acc1);
         repository.save(acc2);
         repository.save(acc3);
 
         assertThat(repository.findAll())
                 .usingRecursiveComparison()
-                .ignoringFields("createdAt", "updatedAt")
-                .isEqualTo(Arrays.asList(SampleTestData.ADMIN_ACCOUNT, acc1, acc2, acc3));
+                .ignoringFields("id", "createdAt", "updatedAt")
+                .isEqualTo(Arrays.asList(admin, acc1, acc2, acc3));
     }
 
     @Test
@@ -119,4 +123,5 @@ public class AccountRepositoryTest {
         assertEquals(resAcc1.get(), acc1);
         assertEquals(resAcc2.get(), acc2);
     }
+    // TODO: add test for findFirstByIdAndEmail and activateAccount
 }

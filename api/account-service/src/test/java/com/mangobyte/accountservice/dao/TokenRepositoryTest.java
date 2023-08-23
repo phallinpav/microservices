@@ -1,14 +1,15 @@
 package com.mangobyte.accountservice.dao;
 
 import com.mangobyte.accountservice.SampleTestData;
-import com.mangobyte.accountservice.model.Account;
-import com.mangobyte.accountservice.model.Token;
+import com.mangobyte.accountservice.model.entity.Account;
+import com.mangobyte.accountservice.model.entity.Token;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class TokenRepositoryTest {

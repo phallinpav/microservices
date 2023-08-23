@@ -2,7 +2,7 @@ package com.mangobyte.accountservice.service;
 
 import com.mangobyte.accountservice.SampleTestData;
 import com.mangobyte.accountservice.dao.AccountRepository;
-import com.mangobyte.accountservice.model.Account;
+import com.mangobyte.accountservice.model.entity.Account;
 import com.mangobyte.accountservice.service.impl.AccountServiceImpl;
 import com.mangobyte.accountservice.utils.CommonUtils;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
 
@@ -98,4 +100,6 @@ public class AccountServiceTest {
     void findFirstByUsername_null() {
         assertThrows(NullPointerException.class, () -> service.findFirstByUsername(null));
     }
+
+    // TODO: need test saveNeedVerify
 }

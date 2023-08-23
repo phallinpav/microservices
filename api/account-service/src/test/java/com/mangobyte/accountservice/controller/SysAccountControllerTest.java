@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SysAccountControllerTest extends BaseControllerTest {
     @MockBean
     private AccountService service;
-    
+
     private final MockHttpServletRequestBuilder GET_ACCOUNTS = get("/sys/accounts");
     private final MockHttpServletRequestBuilder GET_ACCOUNT_ADMIN = get("/sys/accounts/" + SampleTestData.ADMIN_ID);
     private final MockHttpServletRequestBuilder GET_ACCOUNT_USER = get("/sys/accounts/" + SampleTestData.USER_ID);

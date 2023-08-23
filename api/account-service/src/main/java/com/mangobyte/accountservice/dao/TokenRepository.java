@@ -1,7 +1,7 @@
 package com.mangobyte.accountservice.dao;
 
-import com.mangobyte.accountservice.model.Account;
-import com.mangobyte.accountservice.model.Token;
+import com.mangobyte.accountservice.model.entity.Account;
+import com.mangobyte.accountservice.model.entity.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

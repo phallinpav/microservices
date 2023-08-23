@@ -12,7 +12,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -21,7 +25,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,6 +39,8 @@ public class AccountControllerTest extends BaseControllerTest {
     
     private final MockHttpServletRequestBuilder GET_ACCOUNT = get("/account");
     private final MockHttpServletRequestBuilder PATCH_ACCOUNT = patch("/account");
+    private final MockHttpServletRequestBuilder POST_ACCOUNT = post("/account");
+    private final MockMultipartHttpServletRequestBuilder POST_ACCOUNT_PROFILE_IMG = multipart("/account/profileImg");
 
     @BeforeEach
     void setup() {
@@ -209,6 +217,32 @@ public class AccountControllerTest extends BaseControllerTest {
                 .andExpect(content().string(not(CommonUtils.toJsonString(SampleTestData.USER_ACCOUNT_UPDATE_2))));
     }
 
+    @Test
+    void updateAccount_profileImg() throws Exception {
+        MultipartFile file = new MockMultipartFile(
+            "imageFile",
+            "test.jpg",
+            MediaType.IMAGE_JPEG_VALUE,
+            "test image content".getBytes()
+        );
+        mockMvc.perform(addAuthenticatedHeader(POST_ACCOUNT_PROFILE_IMG)
+                .file("image", file.getBytes()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void save_success() throws Exception {
+        JSONObject content =  new JSONObject();
+        content.put("username", SampleTestData.USER_USERNAME);
+        content.put("email", SampleTestData.USER_EMAIL);
+        content.put("password", SampleTestData.USER_PASS);
+        mockMvc.perform(addAuthenticatedHeader(POST_ACCOUNT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content.toString()))
+            .andExpect(status().isOk())
+            .andExpect(content().string(CommonUtils.toJsonString(SampleTestData.USER_ACCOUNT)));
+    }
+
     private void provideServiceValue() {
         when(service.save(eq(SampleTestData.USER_ACCOUNT_UPDATE_FORM_1.getUpdatedAccount(SampleTestData.USER_ACCOUNT))))
                 .thenReturn(SampleTestData.USER_ACCOUNT_UPDATE_1);
@@ -216,9 +250,14 @@ public class AccountControllerTest extends BaseControllerTest {
                 .thenReturn(SampleTestData.USER_ACCOUNT_UPDATE_2);
         when(service.save(eq(SampleTestData.USER_ACCOUNT_UPDATE_FORM_3.getUpdatedAccount(SampleTestData.USER_ACCOUNT))))
                 .thenReturn(SampleTestData.USER_ACCOUNT_UPDATE_3);
+        when(service.saveNeedVerify(eq(SampleTestData.USER_ACCOUNT_CREATE_FORM.toAccountUser())))
+            .thenReturn(SampleTestData.USER_ACCOUNT);
     }
 
-    private MockHttpServletRequestBuilder addAuthenticatedHeader(MockHttpServletRequestBuilder requestBuilder) {
-        return requestBuilder.header(API_HEADER, SampleTestData.USER_TOKEN_VALUE);
+    private <T> T addAuthenticatedHeader(T requestBuilder) {
+        if (requestBuilder instanceof MockHttpServletRequestBuilder) {
+            return (T) ((MockHttpServletRequestBuilder)requestBuilder).header(API_HEADER, SampleTestData.USER_TOKEN_VALUE);
+        }
+        return requestBuilder;
     }
 }

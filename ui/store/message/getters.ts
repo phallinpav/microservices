@@ -10,4 +10,8 @@ export default {
   text(state: any) {
     return state.text
   },
+
+  timeout(state: any) {
+    return state.timeout
+  },
 }

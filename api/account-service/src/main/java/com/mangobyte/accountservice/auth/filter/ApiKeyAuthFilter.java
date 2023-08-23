@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class ApiKeyAuthFilter extends AbstractPreAuthenticatedProcessingFilter {
 
-    private String apiHeader;
+    private final String apiHeader;
 
     public ApiKeyAuthFilter(@Value("${apikey.header}") String apiHeader,
                             @Autowired ApiKeyAuthenticationProvider provider) {

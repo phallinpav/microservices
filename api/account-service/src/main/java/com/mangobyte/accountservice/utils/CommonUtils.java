@@ -5,9 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class CommonUtils {
+
     private final static BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
@@ -29,5 +33,10 @@ public class CommonUtils {
 
     public static String toJsonString(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
+    }
+
+    public static Date getDate() {
+        return Date.from(LocalDateTime.now().withNano(0).atZone(ZoneId.systemDefault())
+                .toInstant());
     }
 }

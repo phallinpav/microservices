@@ -19,8 +19,8 @@ services:
       - 3000:3000
     environment:
       - NUXT_HOST=0.0.0.0
-    volumes:
-      - ./ui/:/app
+    # volumes:
+    #   - ./ui/:/app
   
   kong-db:
     image: postgres:11
