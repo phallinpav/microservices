@@ -4,7 +4,11 @@ kong migrations bootstrap
 
 set -e
 
-apk --no-cache add curl
+# apk --no-cache add curl
+# apk add curl
+# apk upgrade
+
+apk add curl && apk add --upgrade curl
 
 echo "waiting 30 sec for kong-gateway to start properly"
 sleep 30
