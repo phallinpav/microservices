@@ -1,17 +1,29 @@
 services:
   mysql:
+  # this platform: linux/x86_64 was added due to running docker in mac m1 chip
+    platform: linux/x86_64
     extends:
       file: ./api/docker-compose.dev.yml
       service: mysql
       
   account-service:
+    platform: linux/x86_64
     extends:
       file: ./api/docker-compose.dev.yml
       service: account-service
     depends_on:
       - mysql
 
+  # message-service:
+  #   platform: linux/x86_64
+  #   extends:
+  #     file: ./api/docker-compose.dev.yml
+  #     service: message-service
+  #   depends_on:
+  #     - mongodb
+
   ui:
+    platform: linux/x86_64
     build:
       context: ./ui
       target: dev
@@ -23,6 +35,7 @@ services:
     #   - ./ui/:/app
   
   kong-db:
+    platform: linux/x86_64
     image: postgres:11
     environment:
       - POSTGRES_USER=kong
@@ -32,6 +45,7 @@ services:
       - 5432:5432
 
   kong-migrate:
+    platform: linux/x86_64
     image: kong:2.8.1-alpine
     user: root
     command: bash ./script/kong-setup.sh
@@ -47,6 +61,7 @@ services:
       - ./script:/script
 
   kong-gateway:
+    platform: linux/x86_64
     image: kong:2.8.1
     environment:
       - KONG_DATABASE=postgres
@@ -67,6 +82,7 @@ services:
       - kong-db
 
   konga-gui:
+    platform: linux/x86_64
     image: pantsel/konga
     environment:
       - NODE_ENV=development
@@ -81,6 +97,7 @@ services:
       - kong-db
 
   pgadmin:
+    platform: linux/x86_64
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com

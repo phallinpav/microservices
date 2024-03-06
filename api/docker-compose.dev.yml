@@ -19,6 +19,19 @@ services:
       - ./account-service/:/app
     environment:
       - SHOW_SQL=true
+
+  message-service:
+    extends:
+      file: ./docker-compose.base.yml
+      service: message-service
+    build:
+      target: dev
+    ports:
+      - 5555:5555
+    volumes:
+      - ./account-service/:/app
+    environment:
+      - SHOW_SQL=true
 networks:
   default:
     name: microservice_network

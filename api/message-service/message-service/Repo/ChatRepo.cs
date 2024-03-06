@@ -5,15 +5,25 @@ namespace message_service.Repo
 {
     public class ChatRepo : IChatRepo
     {
-        static readonly string _connectionServer = "mongodb://localhost:27017";
-        static readonly string _databaseName = "chat";
+        static readonly string _connectionServer;
+        static readonly string _databaseName;
 
         private readonly IMongoClient _client;
         private readonly IMongoDatabase _database;
 
         public ChatRepo()
         {
-            _client = new MongoClient(_connectionServer);
+            _connectionServer = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING") ?? "mongodb://localhost:27017";
+            _databaseName = Environment.GetEnvironmentVariable("MONGODB_DATABASE_NAME") ?? "chat";
+            _username = Environment.GetEnvironmentVariable("MONGODB_USERNAME") ?? "";
+            _password = Environment.GetEnvironmentVariable("MONGODB_PASSWORD") ?? "";
+
+            var mongoUrlBuilder = new MongoUrlBuilder(_connectionServer);
+            mongoUrlBuilder.Username = _username;
+            mongoUrlBuilder.Password = _password;
+            mongoUrlBuilder.DatabaseName = _databaseName;
+
+            _client = new MongoClient(mongoUrlBuilder.ToMongoUrl());
             _database = _client.GetDatabase(_databaseName);
         }
 
